@@ -36,6 +36,7 @@ void appendToken(tokenArray*array,char*type,char*value){
 
 int main(){
     tokenArray tokens=initTokenArray();
+    appendToken(&tokens,"expr","x");
     appendToken(&tokens,"expr","y");
     appendToken(&tokens,"expr","z");
     for(int i=0; i< tokens.length;i++){
