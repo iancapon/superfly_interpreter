@@ -5,7 +5,7 @@
 
 int main(){
     tokenArray tokens=initTokenArray();
-    char*text="1-(10*(20+30))";
+    char*text="10+20*30 #comentario tonto\n";
     int error=lexer(&tokens,text);
  
     if(error==0){

@@ -76,6 +76,12 @@ char*assembleString(char*text,int*i,int*errorFlag){
     return word;
 }
 
+void skipLine(char*text,int*i){
+    while(text[*i]!='\n' && text[*i]!='\0'){
+        *i+=1;
+    }
+}
+
 int lexer(tokenArray*tokens,char*text){
     int errorFlag=0;
     char*word=malloc(sizeof(char)*2);
@@ -83,22 +89,29 @@ int lexer(tokenArray*tokens,char*text){
     word[1]='\0';
     int i=1;
     while (text[i]!='\0'){
-        if(typeofC(text[i-1])!=6){
-            if(typeofC(text[i-1])==typeofC(text[i]) && typeofC(text[i-1])!=3){
-                appendChar(word,text[i]);
-            }else{
-                if(typeofC(word[0])!=5){
-                    char*value=stringCopy(word);
-                    appendToken(tokens,typeofT(value),value);
+        if(text[i-1]!='#'){
+            if(typeofC(text[i-1])!=6){
+                if(typeofC(text[i-1])==typeofC(text[i]) && typeofC(text[i-1])!=3){
+                    appendChar(word,text[i]);
+                }else{
+                    if(typeofC(word[0])!=5){
+                        char*value=stringCopy(word);
+                        appendToken(tokens,typeofT(value),value);
+                    }
+                    resetString(word);
+                    word[0]=text[i];
                 }
+            }
+            else{
+                word=assembleString(text,&i, &errorFlag);
+                char*value=stringCopy(word);
+                appendToken(tokens,typeofT(value),value);
                 resetString(word);
                 word[0]=text[i];
             }
         }
         else{
-            word=assembleString(text,&i, &errorFlag);
-            char*value=stringCopy(word);
-            appendToken(tokens,typeofT(value),value);
+            skipLine(text,&i);
             resetString(word);
             word[0]=text[i];
         }
