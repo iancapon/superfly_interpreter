@@ -69,6 +69,9 @@ char*typeofT(char*value){
     else if(typeofC(value[0])==5){
         ret="Space";
     }
+    else if(typeofC(value[0])==6){
+        ret="String";
+    }
     else{
         ret="Null";
     }
@@ -95,20 +98,47 @@ char*stringCopy(char*origen){
     }
     return destino;
 }
+char*assembleString(char*text,int*i,int*errorFlag){
+    char*word=malloc(sizeof(char)*2);
+    word[0]=text[*i-1];
+    word[1]='\0';
+    while(text[*i]!='"' && text[*i]!='\0'){
+        appendChar(word,text[*i]);
+        *i+=1;
+    }
+    if(text[*i]!='"'){
+        *errorFlag=10;
+        printf("\nError, upper commas missing\n");
+    }
+    appendChar(word,text[*i]);
+    *i+=1;
+    
+    return word;
+}
 
-void lexer(tokenArray*tokens,char*text){
+int lexer(tokenArray*tokens,char*text){
+    int errorFlag=0;
     char*word=malloc(sizeof(char)*2);
     word[0]=text[0];
     word[1]='\0';
     int i=1;
     while (text[i]!='\0'){
-        if(typeofC(text[i-1])==typeofC(text[i]) && typeofC(text[i-1])!=3){
-            appendChar(word,text[i]);
-        }else{
-            if(typeofC(word[0])!=5){
-                char*value=stringCopy(word);
-                appendToken(tokens,typeofT(value),value);
+        if(typeofC(text[i-1])!=6){
+            if(typeofC(text[i-1])==typeofC(text[i]) && typeofC(text[i-1])!=3){
+                appendChar(word,text[i]);
+            }else{
+                if(typeofC(word[0])!=5){
+                    char*value=stringCopy(word);
+                    appendToken(tokens,typeofT(value),value);
+                }
+                resetString(word);
+                word[0]=text[i];
             }
+        }
+        else{
+            word=assembleString(text,&i, &errorFlag);
+            char*value=stringCopy(word);
+            appendToken(tokens,typeofT(value),value);
             resetString(word);
             word[0]=text[i];
         }
@@ -121,17 +151,22 @@ void lexer(tokenArray*tokens,char*text){
     resetString(word);
     word[0]=text[i];
     free(word);
+
+    return errorFlag;
 }
 
 
 int main(){
     tokenArray tokens=initTokenArray();
-    char*text="((10+ 20)  *30  );";
-    lexer(&tokens,text);
-    //appendToken(&tokens,"expr","x");
-    for(int i=0; i< tokens.length;i++){
-        printToken(tokens.list[i]);
-        printf("\n");
+    char*text="xyz=\"hola mundo\"";
+    int error=lexer(&tokens,text);
+ 
+    if(error==0){
+        for(int i=0; i< tokens.length;i++){
+            printToken(tokens.list[i]);
+            printf("\n");
+        }
     }
+
     return 0;
 }
