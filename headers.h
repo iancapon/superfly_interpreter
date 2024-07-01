@@ -12,4 +12,17 @@ typedef struct tokenArray{
     int length;
 }tokenArray;
 
+tokenArray initTokenArray();
+
+void printToken(token x);
+void assignToken(token*x,char*type,char*value);
+void appendToken(tokenArray*array,char*type,char*value);
+
+
+void appendChar(char*word,char c);
+void resetString(char*word);
+char*stringCopy(char*origen);
+
+int lexer(tokenArray*tokens,char*text);
+
 #endif
