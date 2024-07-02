@@ -26,23 +26,23 @@ void appendToken(tokenArray*array,char*type,char*value){
 }
 
 void appendChar(char*word,char c){
-    word[strlen(word)]=c;
     word=realloc(word,sizeof(char)*(strlen(word)+2));
-    word[strlen(word)]='\0';
+    word[strlen(word)+1]='\0';
+    word[strlen(word)]=c;
 }
 void resetString(char*word){
-    word=word=realloc(word,sizeof(char)*2);
+    word=realloc(word,sizeof(char)*2);
+    word[0]='\0';
     word[1]='\0';
 }
 
 char*stringCopy(char*origen){
-    char*destino=malloc(sizeof(char)*2);
-    destino[0]=origen[0];
-    destino[1]='\0';
-    int i=1;
+    char*destino=malloc(sizeof(char)*(strlen(origen)+1));
+    int i=0;
     while(origen[i]!='\0'){
-        appendChar(destino,origen[i]);
+        destino[i]=origen[i];//appendChar(destino,origen[i]);
         i+=1;
     }
+    destino[i]='\0';
     return destino;
 }

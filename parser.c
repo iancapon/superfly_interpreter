@@ -58,10 +58,11 @@ int bindingPower(token x){
 
 token topof(tokenArray*stack){
     token ret;
-    ret.type="Null";
-    ret.value="Null";
     if(stack->length>0){
         ret=stack->list[stack->length-1];
+    }else{
+        ret.type="Null";
+        ret.value="Null";
     }
     return ret;
 }
@@ -103,12 +104,9 @@ void parser(tokenArray*input){
             }
             else if(strcmp(input->list[i].value,")")==0){
                 while(strcmp(topof(&stack).value,"(")!=0 && stack.length>0){
-                    printToken(topof(&stack));
                     push(&output,pop(&stack));
                 }
                 pop(&stack);
-                //eraseToken(pop(&stack));/////////////// sino va a quedar dando vueltas
-                //eraseToken(input->list[i]);
             }
         }
         else if(strcmp(input->list[i].type,"InfixOperator")==0){
@@ -126,13 +124,7 @@ void parser(tokenArray*input){
         push(&output,pop(&stack));
     }
 
-    printf("\n");
-    printf("\n");
-    for(int i=0; i< output.length;i++){
-        printToken(output.list[i]);
-        printf("\n");
-    }
-    printf("\n");
-    printf("\n");
+    free(input->list);
+    *input=output;
 
 }

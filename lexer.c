@@ -18,7 +18,7 @@ int typeofC(char c){
     if(strrchr("()",c)){
         ret= 3;//"Bracket";
     }
-    if(strrchr("+-*/=",c)){
+    if(strrchr("+-*/=%",c)){
         ret= 4;//"InfixOperator";
     }
     if(strrchr(" ",c)){
@@ -93,13 +93,17 @@ int lexer(tokenArray*tokens,char*text){
             if(typeofC(text[i-1])!=6){
                 if(typeofC(text[i-1])==typeofC(text[i]) && typeofC(text[i-1])!=3){
                     appendChar(word,text[i]);
+                    //printf("->%s<- ",word);
                 }else{
                     if(typeofC(word[0])!=5){
                         char*value=stringCopy(word);
                         appendToken(tokens,typeofT(value),value);
+                        //printf("->%s<- ",value);
                     }
+                    //printf("--%s-- ",word);
                     resetString(word);
                     word[0]=text[i];
+                    //printf("-<%s>- ",word);
                 }
             }
             else{
