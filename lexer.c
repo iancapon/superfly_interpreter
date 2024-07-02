@@ -18,7 +18,7 @@ int typeofC(char c){
     if(strrchr("()",c)){
         ret= 3;//"Bracket";
     }
-    if(strrchr("+-*/=",c)){
+    if(strrchr("+-*/=%",c)){
         ret= 4;//"InfixOperator";
     }
     if(strrchr(" ",c)){

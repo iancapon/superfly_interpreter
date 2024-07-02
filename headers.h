@@ -24,5 +24,6 @@ void resetString(char*word);
 char*stringCopy(char*origen);
 
 int lexer(tokenArray*tokens,char*text);
+void parser(tokenArray*input);
 
 #endif
