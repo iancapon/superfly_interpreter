@@ -1,45 +1,39 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "headers.h"
 
-typedef struct token{
-    char*type;
-    char*value;
-}token;
-
-typedef struct tokenArray{
-    token*list;
-    int length;
-}tokenArray;
-
-void printToken(token x){
-    printf("[%s:%s]",x.type,x.value);
-}
-
-void assignToken(token*x,char*type,char*value){
-    x->type=type;
-    x->value=value;
-}
-
-tokenArray initTokenArray(){
-    tokenArray t;
-    t.length=0;
-    t.list=malloc(sizeof(token));
-    return t;
-}
-
-void appendToken(tokenArray*array,char*type,char*value){
-    assignToken(array->list+array->length,type,value);
-    array->list=realloc(array->list,sizeof(token)*(array->length+2));
-    array->length+=1;
-}
+void calculadoraSimple(tokenArray*input){///// ESTO SE VA DESPUES, SOLO SIRVE PARA CALC SIMPLE
+    char*answer;
+        for(int i=0; i< input->length;i++){
+            if(strcmp(input->list[i].type,"InfixOperator")==0){
+                if(strcmp(input->list[i].value,"+")==0)
+                    sprintf(input->list[i].value, "%.4f", (atof(input->list[i-2].value)+atof(input->list[i-1].value)));
+                else if(strcmp(input->list[i].value,"*")==0)
+                    sprintf(input->list[i].value, "%.4f", (atof(input->list[i-2].value)*atof(input->list[i-1].value)));
+                else if(strcmp(input->list[i].value,"-")==0)
+                    sprintf(input->list[i].value, "%.4f", (atof(input->list[i-2].value)-atof(input->list[i-1].value)));
+                else if(strcmp(input->list[i].value,"/")==0)
+                    sprintf(input->list[i].value, "%.4f", (atof(input->list[i-2].value)/atof(input->list[i-1].value)));
+                answer=input->list[i].value;
+            }
+        }
+    printf("\n\nANSWER: %s",answer);
+}   
 
 int main(){
     tokenArray tokens=initTokenArray();
-    appendToken(&tokens,"expr","y");
-    appendToken(&tokens,"expr","z");
-    for(int i=0; i< tokens.length;i++){
-        printToken(tokens.list[i]);
+    char*text="5+(10.0-20.0)*3.0";
+    int error=lexer(&tokens,text);
+    
+    if(error==0){
+        parser(&tokens);
+        for(int i=0; i< tokens.length;i++){
+            printf("\n");
+            printToken(tokens.list[i]);
+        }
+        calculadoraSimple(&tokens);
     }
+    
     return 0;
 }
